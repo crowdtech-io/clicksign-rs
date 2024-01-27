@@ -1,13 +1,13 @@
 [package]
 name = "clicksign"
-version = "0.2.7"
-authors = ["SOLARIS GESTÃO DE RECURSOS <solcap.com.br>"]
-edition = "2018"
-homepage = "https://github.com/solaris-capital/clicksign-rs"
+version = "0.2.8"
+authors = ["CrowdTech <crowdtech.io>"]
+edition = "2021"
+homepage = "https://github.com/crowdtech-io/clicksign-rs"
 license-file = "LICENSE.md"
 description = "Unofficial Rust library for the Clicksign API"
-documentation = "https://docs.rs/clicksign/0.2.7/clicksign/"
-repository = "https://github.com/solaris-capital/clicksign-rs"
+documentation = "https://docs.rs/clicksign/0.2.8/clicksign/"
+repository = "https://github.com/crowdtech-io/clicksign-rs"
 categories = ["web-programming::http-client"]
 
 
