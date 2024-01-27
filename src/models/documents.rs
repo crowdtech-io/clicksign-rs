@@ -17,11 +17,11 @@ pub struct EventData {
     pub user: HashMap<String, String>,
     /// Information about the Clicksign account in whinch the document was created
     pub account: HashMap<String, String>,
-    // TODO: I'm not sure about the difference between this deadline_at and the Document.deadline_at
+    /// Document deadline
     deadline_at: String,
-    // TODO: I'm not sure about the difference between this auto_close and the Document.auto_close
+    /// Indicates whether the document will be automatically finalized when all the signers sign.
     auto_close: bool,
-    // TODO: I'm not sure about the difference between this locale and the Document.locale
+    /// Indicates the document's locale
     locale: String,
 }
 
