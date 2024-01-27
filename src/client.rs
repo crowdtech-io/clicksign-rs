@@ -1,5 +1,5 @@
-use crate::models::signers::{Signer, SignerToDocument};
 use crate::models::documents::Document;
+use crate::models::signers::{Signer, SignerToDocument};
 use error_chain::bail;
 use reqwest::Response;
 use reqwest::StatusCode;
@@ -131,12 +131,10 @@ impl Client {
     /// ```
     pub async fn create_document_by_model(
         &self,
-        request_body: HashMap<String, Document>
+        request_body: HashMap<String, Document>,
     ) -> Result<HashMap<String, Document>, Box<dyn std::error::Error>> {
         let template_id = &request_body.get("document").unwrap().template.key;
-        let url = self.build_url(
-            &format!("templates/{}/documents", template_id)
-        );
+        let url = self.build_url(&format!("templates/{}/documents", template_id));
         let resp = self
             .client
             .post(url)

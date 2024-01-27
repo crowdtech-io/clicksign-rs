@@ -33,7 +33,7 @@ pub struct DocumentEvent {
     /// Event data
     pub data: EventData,
     /// Datetime the event occurred
-    pub occurred_at: String
+    pub occurred_at: String,
 }
 
 /// This struct defines a metainformation about the document
@@ -72,5 +72,5 @@ pub struct Document {
     /// List of signers in the document
     pub signers: Option<Vec<String>>,
     /// Lists of events that occurred in the document
-    pub events: Option<Vec<DocumentEvent>>
+    pub events: Option<Vec<DocumentEvent>>,
 }
