@@ -58,7 +58,7 @@
 //! async {
 //!  use clicksign::client::Client;
 //!  use std::collections::HashMap;
-//!  use clicksign::models::documents::Document;
+//!  use clicksign::client::documents::Document;
 //!
 //!  let client = Client::new(
 //!     "some_access_token",

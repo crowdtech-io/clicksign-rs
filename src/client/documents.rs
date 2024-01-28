@@ -74,3 +74,21 @@ pub struct Document {
     /// Lists of events that occurred in the document
     pub events: Option<Vec<DocumentEvent>>,
 }
+
+/// Create a new document, based on template
+/// Reference: <https://developers.clicksign.com/docs/criar-documento-via-modelos>
+#[inline]
+pub async fn create_document_by_model_helper(
+    http_client: &reqwest::Client,
+    uri: &String,
+    request_body: HashMap<String, Document>,
+) -> Result<reqwest::Response, Box<dyn std::error::Error>> {
+    let resp = http_client
+        .post(uri)
+        .json(&request_body)
+        .header("Content-Type", "application/json")
+        .send()
+        .await?;
+
+    Ok(resp)
+}

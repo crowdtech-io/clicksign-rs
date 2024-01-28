@@ -1,9 +1,14 @@
-use crate::models::documents::Document;
+/// Request/Response models for documents
+pub mod documents;
+
 use crate::models::signers::{Signer, SignerToDocument};
+pub use documents::{create_document_by_model_helper, Document};
 use error_chain::bail;
 use reqwest::Response;
 use reqwest::StatusCode;
 use std::collections::HashMap;
+
+const BASE_URL: &str = "https://app.clicksign.com/";
 
 /// This struct defines a clicksign Client
 #[derive(Debug)]
@@ -36,9 +41,13 @@ impl Client {
     /// assert_eq!("c9d91ece-9b3b-4def-abac-25b645cb083c", client.access_token);
     /// ```
     pub fn new(access_token: &str, host: Option<&str>) -> Self {
+        let host = match host {
+            Some(h) => h.to_owned(),
+            None => BASE_URL.to_owned(),
+        };
         Self {
-            host: host.unwrap_or("https://app.clicksign.com/").to_string(),
-            access_token: access_token.to_string(),
+            host,
+            access_token: access_token.to_owned(),
             client: reqwest::Client::new(),
         }
     }
@@ -64,7 +73,10 @@ impl Client {
     }
 
     /// Given a Response object, return the body content or the appropriate message error
-    async fn handler(&self, response: Response) -> Result<String, Box<dyn std::error::Error>> {
+    async fn response_handler(
+        &self,
+        response: Response,
+    ) -> Result<String, Box<dyn std::error::Error>> {
         match response.status() {
             StatusCode::CREATED | StatusCode::OK | StatusCode::ACCEPTED => {
                 Ok(response.text().await.unwrap())
@@ -94,15 +106,14 @@ impl Client {
     /// Reference: <https://developers.clicksign.com/docs/criar-documento-via-modelos>
     ///
     /// # Arguments
-    /// * template_id (&str): The ID of the template for which you want to create the document.
-    /// * template_body (&str): A json-like string to fill in the document template
+    /// * request_body: request payload to create a new document via model
     ///
     /// # Example
     /// ```no_run
     /// async {
     ///   use clicksign::client::Client;
     ///   use std::collections::HashMap;
-    ///   use clicksign::models::documents::Document;
+    ///   use clicksign::client::documents::Document;
     ///
     ///   let client = Client::new(
     ///      "some_access_token",
@@ -134,17 +145,12 @@ impl Client {
         request_body: HashMap<String, Document>,
     ) -> Result<HashMap<String, Document>, Box<dyn std::error::Error>> {
         let template_id = &request_body.get("document").unwrap().template.key;
-        let url = self.build_url(&format!("templates/{}/documents", template_id));
-        let resp = self
-            .client
-            .post(url)
-            .json(&request_body)
-            .header("Content-Type", "application/json")
-            .send()
-            .await?;
+        let uri = self.build_url(&format!("templates/{}/documents", template_id));
+
+        let response = create_document_by_model_helper(&self.client, &uri, request_body).await?;
 
         let result: HashMap<String, Document> =
-            serde_json::from_str(&self.handler(resp).await.unwrap())?;
+            serde_json::from_str(&self.response_handler(response).await.unwrap())?;
 
         Ok(result)
     }
@@ -203,7 +209,7 @@ impl Client {
             .send()
             .await?;
         let result: HashMap<String, Signer> =
-            serde_json::from_str(&self.handler(resp).await.unwrap())?;
+            serde_json::from_str(&self.response_handler(resp).await.unwrap())?;
 
         Ok(result)
     }
@@ -253,7 +259,7 @@ impl Client {
             .send()
             .await?;
         let result: HashMap<String, SignerToDocument> =
-            serde_json::from_str(&self.handler(resp).await.unwrap())?;
+            serde_json::from_str(&self.response_handler(resp).await.unwrap())?;
 
         Ok(result)
     }
