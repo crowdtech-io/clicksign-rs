@@ -92,7 +92,7 @@ let document = client.create_document_by_model("template_id", template_body)
 # License
 The MIT License (MIT)
 
-Copyright (c) 2021 Solaris Capital <bptech at solcap dot com dot br>
+Copyright (c) 2024 CrowdTech <hello at crowdtech dot io>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
